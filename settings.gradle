@@ -1,0 +1,5 @@
+rootProject.name = 'JavaSpringMicroServices'
+include 'auth-service'
+include 'config-server-service'
+include 'userprofile-service'
+
