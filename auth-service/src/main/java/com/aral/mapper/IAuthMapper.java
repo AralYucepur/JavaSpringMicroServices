@@ -15,4 +15,5 @@ public interface IAuthMapper {
         Auth fromRegisterRequestDto(final RegisterRequestDto dto);
         @Mapping(source = "id", target = "authid")
         RegisterResponseDto fromAuth(final Auth auth);
+
 }

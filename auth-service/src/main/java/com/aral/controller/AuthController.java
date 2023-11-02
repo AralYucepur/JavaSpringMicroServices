@@ -1,6 +1,8 @@
 package com.aral.controller;
 
+import com.aral.dto.request.DoLoginRequestDto;
 import com.aral.dto.request.RegisterRequestDto;
+import com.aral.dto.response.DoLoginResponseDto;
 import com.aral.dto.response.RegisterResponseDto;
 import com.aral.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +20,10 @@ import static com.aral.constants.RestApi.*;
 public class AuthController {
     private final AuthService authService;
     @PostMapping(DOLOGIN)
-    public ResponseEntity<Boolean> doLogin(String username, String password){
+    @CrossOrigin("*")
+    public ResponseEntity<DoLoginResponseDto> doLogin(@RequestBody @Valid DoLoginRequestDto dto){
 
-        return ResponseEntity.ok(true);
+        return ResponseEntity.ok(authService.doLogin(dto));
     }
     @PostMapping(REGISTER)
     @CrossOrigin("*")
