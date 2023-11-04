@@ -21,6 +21,7 @@ public class AuthService extends ServiceManager<Auth,Long> {
     private final JwtTokenManager jwtTokenManager;
 
 
+
     public AuthService(IAuthRepository repository, JwtTokenManager jwtTokenManager){
         super(repository);
         this.repository=repository;

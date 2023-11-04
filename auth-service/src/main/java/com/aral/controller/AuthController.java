@@ -7,6 +7,7 @@ import com.aral.dto.response.RegisterResponseDto;
 import com.aral.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -23,6 +24,7 @@ public class AuthController {
     @CrossOrigin("*")
     public ResponseEntity<DoLoginResponseDto> doLogin(@RequestBody @Valid DoLoginRequestDto dto){
 
+
         return ResponseEntity.ok(authService.doLogin(dto));
     }
     @PostMapping(REGISTER)
@@ -30,5 +32,13 @@ public class AuthController {
     public ResponseEntity<RegisterResponseDto> register(@RequestBody @Valid RegisterRequestDto dto){
 
         return ResponseEntity.ok(authService.save(dto));
+    }
+
+    @GetMapping("/say")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<String> JwtTry(){
+
+        return ResponseEntity.ok("Deneme başarılı.");
+
     }
 }
