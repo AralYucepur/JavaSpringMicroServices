@@ -16,7 +16,7 @@ import static com.aral.constants.RestApi.*;
 @RequiredArgsConstructor
 public class UserProfileController {
 
-    private UserProfileService userProfileService;
+    private final UserProfileService userProfileService;
 
     @PostMapping(CREATEPROFILE)
     @CrossOrigin("*")
