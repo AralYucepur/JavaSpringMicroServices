@@ -18,8 +18,7 @@ import java.util.Optional;
 
 public class JwtTokenFilter extends OncePerRequestFilter {
 
-
-
+    
     @Autowired
     JwtTokenManager jwtTokenManager;
 

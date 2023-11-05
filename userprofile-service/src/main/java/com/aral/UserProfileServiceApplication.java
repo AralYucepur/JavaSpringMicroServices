@@ -2,9 +2,10 @@ package com.aral;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
 @SpringBootApplication
-public class AuthApplication {
+public class UserProfileServiceApplication {
     public static void main(String[] args) {
-        SpringApplication.run(AuthApplication.class);
+        SpringApplication.run(UserProfileServiceApplication.class);
     }
 }

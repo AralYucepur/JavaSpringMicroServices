@@ -5,7 +5,6 @@ import com.aral.dto.request.RegisterRequestDto;
 import com.aral.dto.response.DoLoginResponseDto;
 import com.aral.dto.response.RegisterResponseDto;
 import com.aral.service.AuthService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -17,9 +16,13 @@ import static com.aral.constants.RestApi.*;
 
 @RestController
 @RequestMapping(AUTH)
-@RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
+
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
+
     @PostMapping(DOLOGIN)
     @CrossOrigin("*")
     public ResponseEntity<DoLoginResponseDto> doLogin(@RequestBody @Valid DoLoginRequestDto dto){

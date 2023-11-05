@@ -1,0 +1,16 @@
+server:
+  port: 9093
+
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: aral
+    password: root
+  data:
+    mongodb:
+      host: localhost
+      port: 27000
+      database: TemporaryUserProfileDB
+      username: AralMongoDB
+      password: Aral12345
