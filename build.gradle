@@ -41,8 +41,8 @@ allprojects{
         annotationProcessor libs.mapstructProcessor
         implementation libs.jwt
 //        implementation libs.springCloudOpenFeign
-//        implementation libs.springCloudStarterSleuth
-//        implementation libs.springCloudStarterZipkin
+        implementation libs.springCloudStarterSleuth
+        implementation libs.springCloudStarterZipkin
 
     }
 }
