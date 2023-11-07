@@ -4,7 +4,8 @@ package com.aral.config.security;
 import com.aral.repository.entity.Auth;
 import com.aral.service.AuthService;
 import com.aral.service.RoleService;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -20,11 +21,17 @@ import java.util.Optional;
 @Service
 public class JwtUserDetails implements UserDetailsService {
 
-    @Autowired
-    AuthService authService;
 
-    @Autowired
+    AuthService authService;
     RoleService roleService;
+
+
+    public JwtUserDetails(@Lazy AuthService authService, RoleService roleService) {
+
+        this.authService = authService;
+        this.roleService = roleService;
+    }
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

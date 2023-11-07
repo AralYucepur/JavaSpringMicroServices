@@ -14,8 +14,8 @@ public enum ErrorType{
     LOGIN_ERROR(4112,"Kullanıcı adı veya şifre hatalı.",HttpStatus.BAD_REQUEST),
     JWT_TOKEN_CREATE_ERROR(4113,"Token oluşturulamadı,",HttpStatus.BAD_REQUEST),
     BAD_REQUEST_ERROR(4100,"Parametre eksik veya hatalı",HttpStatus.BAD_REQUEST),
-
-    JWT_INVALID_TOKEN(4114,"Geçersiz token.",HttpStatus.BAD_REQUEST)
+    JWT_INVALID_TOKEN(4114,"Geçersiz token.",HttpStatus.BAD_REQUEST),
+    INVALID_AUTHORITY(4115,"Yetkisiz Kullanıcı",HttpStatus.BAD_REQUEST)
 
     ;
 

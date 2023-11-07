@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 
-public class JwtTokenFilter extends OncePerRequestFilter {
+public class JwtTokenFilter extends OncePerRequestFilter{
 
     
     @Autowired
@@ -24,6 +24,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     @Autowired
     JwtUserDetails jwtUserDetails;
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request

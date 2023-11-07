@@ -5,6 +5,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -20,6 +21,14 @@ import static com.aral.exception.ErrorType.*;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    private ErrorMessage createErrorMessage(Exception exception, ErrorType errorType){
+        System.out.println("ERROR: "+exception.getMessage());
+        return ErrorMessage.builder()
+                .message(errorType.message)
+                .code(errorType.getCode())
+                .build();
+
+    }
 
     @ExceptionHandler(Exception.class)
     @ResponseBody
@@ -27,6 +36,12 @@ public class GlobalExceptionHandler {
         System.out.println("Hata oluştu");
         ErrorType errorType = INTERNAL_ERROR;
         return new ResponseEntity<>(createErrorMessage(exception,errorType), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseBody
+    public ResponseEntity<ErrorMessage> handlerInvalidAuthority(AccessDeniedException exception){
+        ErrorType errorType = INVALID_AUTHORITY;
+        return new ResponseEntity<>(createErrorMessage(exception,errorType), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(AuthServiceException.class)
@@ -94,13 +109,6 @@ public class GlobalExceptionHandler {
         errorMessage.setFields(fields);
         return new ResponseEntity<>(errorMessage, errorType.getHttpStatus());
     }
-    private ErrorMessage createErrorMessage(Exception exception, ErrorType errorType){
-        System.out.println("ERROR: "+exception.getMessage());
-        return ErrorMessage.builder()
-                .message(errorType.message)
-                .code(errorType.getCode())
-                .build();
 
-    }
 
 }
