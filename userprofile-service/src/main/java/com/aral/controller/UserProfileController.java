@@ -25,6 +25,15 @@ public class UserProfileController {
         return ResponseEntity.ok(userProfileService.createProfile(dto));
 
     }
+    @GetMapping("/userdeneme")
+    @CrossOrigin("*")
+//    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<String> userdeneme(){
+
+        return ResponseEntity.ok("başarılı");
+    }
+
+
 
 
 }

@@ -4,8 +4,6 @@ buildscript {
     }
 }
 dependencies {
-    implementation libs.springBootDataMongo
-    implementation libs.springBootStarterAmqp
     implementation libs.springCloudConfigClient
-    implementation libs.springBootDataRedis
+    implementation libs.springBootDataElasticsearch
 }

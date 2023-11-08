@@ -3,4 +3,5 @@ include 'auth-service'
 include 'config-server-service'
 include 'userprofile-service'
 include 'api-gateway-service'
+include 'elastic-search-service'
 
