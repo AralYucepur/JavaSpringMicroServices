@@ -40,7 +40,7 @@ allprojects{
         implementation libs.mapstruct
         annotationProcessor libs.mapstructProcessor
         implementation libs.jwt
-//        implementation libs.springCloudOpenFeign
+        implementation libs.springCloudOpenFeign
         implementation libs.springCloudStarterSleuth
         implementation libs.springCloudStarterZipkin
 

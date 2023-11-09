@@ -19,3 +19,7 @@ spring:
       database: TemporaryUserProfileDB
       username: AralMongoDB
       password: Aral12345
+
+myapplication:
+  feignclient:
+    elasticsearch: http://localhost:9100/userprofile

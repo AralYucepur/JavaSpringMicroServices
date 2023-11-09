@@ -6,4 +6,6 @@ buildscript {
 dependencies {
     implementation libs.springCloudConfigClient
     implementation libs.springBootDataElasticsearch
+    implementation libs.graphiqlSpringStarter
+    implementation libs.graphqlSpringStarter
 }
