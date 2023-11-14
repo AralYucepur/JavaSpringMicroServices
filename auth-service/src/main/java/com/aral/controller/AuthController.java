@@ -30,13 +30,13 @@ public class AuthController {
         return ResponseEntity.ok(authService.doLogin(dto));
     }
 
-    @PostMapping("/deneme")
-    @CrossOrigin("*")
-    public ResponseEntity<DoLoginResponseDto> deneme(@RequestBody @Valid DoLoginRequestDto dto){
-
-
-        return ResponseEntity.ok(authService.authan(dto));
-    }
+//    @PostMapping("/deneme")
+//    @CrossOrigin("*")
+//    public ResponseEntity<DoLoginResponseDto> deneme(@RequestBody @Valid DoLoginRequestDto dto){
+//
+//
+//        return ResponseEntity.ok(authService.authan(dto));
+//    }
     @PostMapping(REGISTER)
     @CrossOrigin("*")
     public ResponseEntity<RegisterResponseDto> register(@RequestBody @Valid RegisterRequestDto dto){

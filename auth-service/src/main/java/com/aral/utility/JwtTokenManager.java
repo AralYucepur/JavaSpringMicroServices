@@ -7,13 +7,14 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class JwtTokenManager {
     private final String keypassword = "123456";
 
-    public Optional<String> createToken(Long id){
+    public Optional<String> createToken(Long id, List<String> roles){
 
         String token;
         Long expDate = 1000L*60*5;
@@ -21,6 +22,7 @@ public class JwtTokenManager {
             token = JWT.create()
                     .withAudience()
                     .withClaim("id",id)
+                    .withClaim("roles", roles)
                     .withIssuer("aral")
                     .withIssuedAt(new Date())
                     .withExpiresAt(new Date(System.currentTimeMillis()+expDate))
@@ -47,5 +49,20 @@ public class JwtTokenManager {
         }catch(Exception exception){
                 return Optional.empty();
             }
+    }
+
+    public Optional<List<String>> getRolesFromToken(String token) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC512(keypassword);
+            JWTVerifier verifier = JWT.require(algorithm)
+                    .withIssuer("aral")
+                    .build();
+            DecodedJWT decodedJWT = verifier.verify(token);
+            if (decodedJWT == null)
+                return Optional.empty();
+            return Optional.of(decodedJWT.getClaim("roles").asList(String.class));
+        }catch(Exception exception){
+            return Optional.empty();
+        }
     }
 }

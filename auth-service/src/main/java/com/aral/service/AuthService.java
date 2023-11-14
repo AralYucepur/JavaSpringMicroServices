@@ -11,7 +11,9 @@ import com.aral.mapper.IAuthMapper;
 import com.aral.rabbitmq.model.CreateUser;
 import com.aral.rabbitmq.producer.CreateUserProducer;
 import com.aral.repository.IAuthRepository;
+import com.aral.repository.IRoleRepository;
 import com.aral.repository.entity.Auth;
+import com.aral.repository.entity.Role;
 import com.aral.utility.JwtTokenManager;
 import com.aral.utility.ServiceManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,19 +21,23 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthService extends ServiceManager<Auth,Long> {
     private final IAuthRepository repository;
+    private final IRoleRepository roleRepository;
     private final JwtTokenManager jwtTokenManager;
     private final CreateUserProducer createUserProducer;
     private final JwtUserDetails jwtUserDetails;
 
 
-    public AuthService(IAuthRepository repository, JwtTokenManager jwtTokenManager, CreateUserProducer createUserProducer, JwtUserDetails jwtUserDetails) {
+    public AuthService(IAuthRepository repository, IRoleRepository roleRepository, JwtTokenManager jwtTokenManager, CreateUserProducer createUserProducer, JwtUserDetails jwtUserDetails) {
         super(repository);
         this.repository = repository;
+        this.roleRepository = roleRepository;
         this.jwtTokenManager = jwtTokenManager;
         this.createUserProducer = createUserProducer;
         this.jwtUserDetails = jwtUserDetails;
@@ -60,9 +66,10 @@ public class AuthService extends ServiceManager<Auth,Long> {
 
     public DoLoginResponseDto doLogin(DoLoginRequestDto dto) {
         Optional<Auth> auth = repository.findOptionalByUsernameAndPassword(dto.getUsername(), dto.getPassword());
+        List<Role> role = roleRepository.findByAuthid(auth.get().getId());
         if (auth.isEmpty())
             throw new AuthServiceException(ErrorType.LOGIN_ERROR);
-        Optional<String> token = jwtTokenManager.createToken(auth.get().getId());
+        Optional<String> token = jwtTokenManager.createToken(auth.get().getId(), role.stream().map(Role::getRole).collect(Collectors.toList()));
         if (token.isEmpty())
             throw new AuthServiceException(ErrorType.JWT_TOKEN_CREATE_ERROR);
 
@@ -71,27 +78,27 @@ public class AuthService extends ServiceManager<Auth,Long> {
                 .build();
     }
 
-    public DoLoginResponseDto authan(DoLoginRequestDto dto) {
-
-
-        Optional<Auth> auth = repository.findOptionalByUsernameAndPassword(dto.getUsername(), dto.getPassword());
-        if (auth.isEmpty())
-            throw new AuthServiceException(ErrorType.LOGIN_ERROR);
-        Optional<String> token = jwtTokenManager.createToken(auth.get().getId());
-        if (token.isEmpty())
-            throw new AuthServiceException(ErrorType.JWT_TOKEN_CREATE_ERROR);
-        Optional<Long> authid = jwtTokenManager.getByIdFromToken(token.orElse("").toString());
-        if (authid.isPresent()) {
-            UserDetails userDetails = jwtUserDetails.getUserByAuthId(authid.get());
-            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                    userDetails, null, userDetails.getAuthorities()
-            );
-            SecurityContextHolder.getContext().setAuthentication(authToken);
-        }else {
-            throw new AuthServiceException(ErrorType.JWT_INVALID_TOKEN);
-        }
-        return DoLoginResponseDto.builder()
-                .token(token.get())
-                .build();
-    }
+//    public DoLoginResponseDto authan(DoLoginRequestDto dto) {
+//
+//
+//        Optional<Auth> auth = repository.findOptionalByUsernameAndPassword(dto.getUsername(), dto.getPassword());
+//        if (auth.isEmpty())
+//            throw new AuthServiceException(ErrorType.LOGIN_ERROR);
+//        Optional<String> token = jwtTokenManager.createToken(auth.get().getId());
+//        if (token.isEmpty())
+//            throw new AuthServiceException(ErrorType.JWT_TOKEN_CREATE_ERROR);
+//        Optional<Long> authid = jwtTokenManager.getByIdFromToken(token.orElse("").toString());
+//        if (authid.isPresent()) {
+//            UserDetails userDetails = jwtUserDetails.getUserByAuthId(authid.get());
+//            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+//                    userDetails, null, userDetails.getAuthorities()
+//            );
+//            SecurityContextHolder.getContext().setAuthentication(authToken);
+//        }else {
+//            throw new AuthServiceException(ErrorType.JWT_INVALID_TOKEN);
+//        }
+//        return DoLoginResponseDto.builder()
+//                .token(token.get())
+//                .build();
+//    }
 }

@@ -5,6 +5,7 @@ import com.aral.dto.request.CreateProfileRequestDto;
 import com.aral.service.UserProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -33,7 +34,14 @@ public class UserProfileController {
         return ResponseEntity.ok("başarılı");
     }
 
+    @GetMapping("/say")
+    @CrossOrigin("*")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<String> JwtTry(){
 
+        return ResponseEntity.ok("Deneme başarılı.");
+
+    }
 
 
 }
