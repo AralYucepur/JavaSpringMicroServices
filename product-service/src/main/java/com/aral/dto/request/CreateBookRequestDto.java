@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @Builder
 public class CreateBookRequestDto {
 
-    String name;
+    String productName;
     String author;
     String publisher;
     Integer pageCount;
