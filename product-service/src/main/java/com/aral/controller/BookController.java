@@ -1,7 +1,9 @@
 package com.aral.controller;
 
 import com.aral.dto.request.CreateBookRequestDto;
+import com.aral.dto.request.UpdateBookRequestDto;
 import com.aral.dto.response.CreateBookResponseDto;
+import com.aral.dto.response.UpdateBookResponseDto;
 import com.aral.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,13 @@ public class BookController {
     public ResponseEntity<CreateBookResponseDto> createBook(@RequestBody @Valid CreateBookRequestDto dto){
 
         return ResponseEntity.ok(bookService.create(dto));
+
+    }
+    @CrossOrigin("*")
+    @PostMapping("/update")
+    public ResponseEntity<UpdateBookResponseDto> createBook(@RequestBody @Valid UpdateBookRequestDto dto){
+
+        return ResponseEntity.ok(bookService.update(dto));
 
     }
 }

@@ -1,12 +1,16 @@
 package com.aral.service;
 
 import com.aral.dto.request.CreateBookRequestDto;
+import com.aral.dto.request.UpdateBookRequestDto;
 import com.aral.dto.response.CreateBookResponseDto;
+import com.aral.dto.response.UpdateBookResponseDto;
 import com.aral.mapper.IBookMapper;
 import com.aral.repository.IBookRepository;
 import com.aral.repository.entity.Book;
 import com.aral.utility.ServiceManager;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class BookService extends ServiceManager<Book, Long> {
@@ -18,10 +22,24 @@ public class BookService extends ServiceManager<Book, Long> {
         this.repository = repository;
     }
 
-    public CreateBookResponseDto create(CreateBookRequestDto dto){
+    public CreateBookResponseDto create(CreateBookRequestDto dto) {
+
         Book book = save(IBookMapper.INSTANCE.fromCreateBookRequestDto(dto));
         return CreateBookResponseDto.builder()
                 .message("Kitap kaydı başarılı").build();
+    }
+
+    public UpdateBookResponseDto update(UpdateBookRequestDto dto){
+        Optional<Book> existingOptionalBook = repository.findOptionalById(dto.getId());
+        if(existingOptionalBook.isPresent()){
+            Book existingBook = existingOptionalBook.get();
+            Book updateBook = update(IBookMapper.INSTANCE.fromUpdateBookRequestDto(dto, existingBook));
+            return UpdateBookResponseDto.builder()
+                    .message(updateBook.getProductName()+" adlı kitabınız başarıyla güncellendi.").build();
+        }else{
+        return UpdateBookResponseDto.builder()
+                .message("Güncellemeye çalıştığınız kitap bulunamadı").build();}
 
     }
+
 }

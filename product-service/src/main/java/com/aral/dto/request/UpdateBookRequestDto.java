@@ -6,27 +6,24 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.time.LocalDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
-public class CreateBookRequestDto {
-
-    @NotBlank(message = "Kitap ismi boş geçilemez.")
-    @Size(min = 1,max = 32)
+public class UpdateBookRequestDto {
+    Long id;
     String productName;
-    @NotBlank(message = "Yazar ismi boş geçilemez.")
-    @Size(min = 1,max = 32)
+    String productDescription;
+    Double productPrice;
     String author;
-    @NotBlank(message = "Yayıncı ismi boş geçilemez.")
-    @Size(min = 1,max = 32)
+    Integer stockQuantity;
     String publisher;
     Integer pageCount;
+    @Enumerated(EnumType.STRING)
     BookType type;
     LocalDate publishDate;
-
 }

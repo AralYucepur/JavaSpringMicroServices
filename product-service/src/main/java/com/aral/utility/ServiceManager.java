@@ -26,6 +26,7 @@ public class ServiceManager<T extends Product, ID> implements IService<T,ID> {
 
     @Override
     public T update(T t) {
+        t.setUpdatedate(System.currentTimeMillis());
         return repository.save(t);
     }
 
