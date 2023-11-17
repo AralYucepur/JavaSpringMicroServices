@@ -10,9 +10,10 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-//@SuperBuilder
 @Table(name = "tblbook")
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorValue("BOOK")
 public class Book extends Product{
     String author;
     String publisher;

@@ -10,17 +10,20 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Table(name = "tblproduct")
 @SuperBuilder
-@MappedSuperclass
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "product_type", discriminatorType = DiscriminatorType.STRING)
 public abstract class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    Long productId;
     String productName;
     String productDescription;
     Double productPrice;
-    Integer stockQuantity;
+    Integer productQuantity;
     Long createdate;
     Long updatedate;
     boolean isactive;

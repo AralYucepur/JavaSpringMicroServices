@@ -30,7 +30,7 @@ public class BookService extends ServiceManager<Book, Long> {
     }
 
     public UpdateBookResponseDto update(UpdateBookRequestDto dto){
-        Optional<Book> existingOptionalBook = repository.findOptionalById(dto.getId());
+        Optional<Book> existingOptionalBook = repository.findOptionalByProductId(dto.getProductId());
         if(existingOptionalBook.isPresent()){
             Book existingBook = existingOptionalBook.get();
             Book updateBook = update(IBookMapper.INSTANCE.fromUpdateBookRequestDto(dto, existingBook));

@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @Data
 @Builder
 public class UpdateBookRequestDto {
-    Long id;
+    Long productId;
     String productName;
     String productDescription;
     Double productPrice;

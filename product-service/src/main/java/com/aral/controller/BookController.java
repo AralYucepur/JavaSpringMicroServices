@@ -25,8 +25,8 @@ public class BookController {
 
     }
     @CrossOrigin("*")
-    @PostMapping("/update")
-    public ResponseEntity<UpdateBookResponseDto> createBook(@RequestBody @Valid UpdateBookRequestDto dto){
+    @PutMapping("/update")
+    public ResponseEntity<UpdateBookResponseDto> updateBook(@RequestBody @Valid UpdateBookRequestDto dto){
 
         return ResponseEntity.ok(bookService.update(dto));
 

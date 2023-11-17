@@ -1,14 +1,13 @@
 package com.aral.repository;
 
-import com.aral.repository.entity.Book;
+import com.aral.repository.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface IBookRepository extends JpaRepository<Book, Long> {
+public interface IProductRepository extends JpaRepository<Product, Long> {
 
-    Optional<Book> findOptionalByProductId(Long id);
-
+    Optional<Product> findOptionalByProductId(Long id);
 }
