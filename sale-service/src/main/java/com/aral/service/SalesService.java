@@ -1,7 +1,7 @@
 package com.aral.service;
 
-//import com.aral.manager.IProductManager;
 import com.aral.dto.request.FindProductByIdRequestDto;
+import com.aral.dto.request.SaleRequestDto;
 import com.aral.dto.response.FindProductByIdResponseDto;
 import com.aral.manager.IProductManager;
 import com.aral.mapper.ISalesMapper;
@@ -24,11 +24,21 @@ public class SalesService extends ServiceManager<Sales, Long> {
     }
 
 
-    public FindProductByIdResponseDto createSales(FindProductByIdRequestDto dto){
+    public FindProductByIdResponseDto createSales(FindProductByIdRequestDto dto, SaleRequestDto sDto){
         ResponseEntity<FindProductByIdResponseDto> response = productManager.findProduct(dto);
-        Sales sale = save(ISalesMapper.INSTANCE.fromProductReturnDto(response.getBody()));
+        int stockControl = sDto.getSaleQuantity();
+//      Reminder!!! >>>  Check null point
+        if(stockControl > response.getBody().getStockQuantity()){
+            throw new IllegalStateException("Stok miktarı yetersiz!");
+        }else {
 
-        return response.getBody();
+
+        Sales sale = ISalesMapper.INSTANCE.fromProductReturnDto(response.getBody());
+        sale.setSaleQuantity(sDto.getSaleQuantity());
+        sale.setPrice(response.getBody().getProductPrice()*sDto.getSaleQuantity());
+        save(sale);
+
+        return response.getBody();}
 
     }
 }

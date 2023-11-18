@@ -2,16 +2,16 @@ package com.aral.repository.entity;
 
 import com.aral.utility.BaseEntity;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@SuperBuilder
+@Builder
 @Entity
 @Table(name = "tblsales")
 public class Sales extends BaseEntity {
