@@ -2,6 +2,7 @@ package com.aral.mapper;
 
 import com.aral.dto.request.RegisterRequestDto;
 import com.aral.dto.response.RegisterResponseDto;
+import com.aral.rabbitmq.model.MailModel;
 import com.aral.repository.entity.Auth;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -15,5 +16,6 @@ public interface IAuthMapper {
         Auth fromRegisterRequestDto(final RegisterRequestDto dto);
         @Mapping(source = "id", target = "authid")
         RegisterResponseDto fromAuth(final Auth auth);
+        MailModel toMAilModelFromAuth (final Auth auth);
 
 }

@@ -10,11 +10,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MailService {
 
-    private JavaMailSender javaMailSender;
+    private final JavaMailSender javaMailSender;
 
     public void sendMail (MailModel model){
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setFrom("");// will add Main Mail(.yml)
+        simpleMailMessage.setFrom("${aral_gmail}");
         simpleMailMessage.setTo(model.getEmail());
         simpleMailMessage.setSubject("Aktivasyon Kodunuz.");
         simpleMailMessage.setText(model.getEmail()+" mail adresine ait aktivasyon kodunuz: "+model.getActivationCode());

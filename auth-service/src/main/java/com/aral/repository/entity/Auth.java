@@ -20,6 +20,7 @@ public class Auth {
     String username;
     String password;
     String email;
+    String activationCode;
     Long createdate;
     Long updatedate;
     @Enumerated(EnumType.STRING)
