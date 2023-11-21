@@ -13,32 +13,27 @@ import com.aral.rabbitmq.model.MailModel;
 import com.aral.rabbitmq.producer.CreateUserProducer;
 import com.aral.rabbitmq.producer.MailProducer;
 import com.aral.repository.IAuthRepository;
-import com.aral.repository.IRoleRepository;
 import com.aral.repository.entity.Auth;
-import com.aral.repository.entity.Role;
+import com.aral.repository.enums.EState;
 import com.aral.utility.ActivationCode;
 import com.aral.utility.JwtTokenManager;
 import com.aral.utility.ServiceManager;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class AuthService extends ServiceManager<Auth,Long> {
     private final IAuthRepository repository;
-    private final IRoleRepository roleRepository;
     private final JwtTokenManager jwtTokenManager;
     private final CreateUserProducer createUserProducer;
     private final MailProducer mailProducer;
     private final JwtUserDetails jwtUserDetails;
 
 
-    public AuthService(IAuthRepository repository, IRoleRepository roleRepository, JwtTokenManager jwtTokenManager, CreateUserProducer createUserProducer, MailProducer mailProducer, JwtUserDetails jwtUserDetails) {
+    public AuthService(IAuthRepository repository,  JwtTokenManager jwtTokenManager, CreateUserProducer createUserProducer, MailProducer mailProducer, JwtUserDetails jwtUserDetails) {
         super(repository);
         this.repository = repository;
-        this.roleRepository = roleRepository;
         this.jwtTokenManager = jwtTokenManager;
         this.createUserProducer = createUserProducer;
         this.mailProducer = mailProducer;
@@ -56,6 +51,8 @@ public class AuthService extends ServiceManager<Auth,Long> {
         Auth auth = IAuthMapper.INSTANCE.fromRegisterRequestDto(dto);
         auth.setActivationCode(ActivationCode.activationCodeGenerator());
         save(auth);
+        String token = jwtTokenManager.createToken(auth.getId(), auth.getRole(), auth.getState())
+                .orElseThrow(() -> new AuthServiceException(ErrorType.JWT_TOKEN_CREATE_ERROR));
 
         createUserProducer.convertAndSendMessageCreateUser(CreateUser.builder()
                 .authid(auth.getId())
@@ -67,6 +64,7 @@ public class AuthService extends ServiceManager<Auth,Long> {
 
 
         RegisterResponseDto result = IAuthMapper.INSTANCE.fromAuth(auth);
+        result.setToken(token);
         result.setRegisterstate(100);
         result.setContent(auth.getEmail() + " ile başarılı bir şekilde kayıt oldunuz.");
         return result;
@@ -77,14 +75,26 @@ public class AuthService extends ServiceManager<Auth,Long> {
         Optional<Auth> auth = repository.findOptionalByUsernameAndPassword(dto.getUsername(), dto.getPassword());
         if (auth.isEmpty())
             throw new AuthServiceException(ErrorType.LOGIN_ERROR);
-        List<Role> role = roleRepository.findByAuthid(auth.get().getId());
-        Optional<String> token = jwtTokenManager.createToken(auth.get().getId(), role.stream().map(Role::getRole).collect(Collectors.toList()));
+        if (auth.get().getState() == EState.PENDING)
+            throw new AuthServiceException(ErrorType.INACTIVE_ACCOUNT);
+        if (auth.get().getState() == EState.BLOCKED)
+            throw new AuthServiceException(ErrorType.BLOCKED_ACCOUNT);
+        Optional<String> token = jwtTokenManager.createToken(auth.get().getId(), auth.get().getRole(), auth.get().getState());
         if (token.isEmpty())
             throw new AuthServiceException(ErrorType.JWT_TOKEN_CREATE_ERROR);
 
         return DoLoginResponseDto.builder()
                 .token(token.get())
                 .build();
+    }
+
+    public void saveState(String token, EState state){
+        Long authId = jwtTokenManager.getByIdFromToken(token).orElseThrow(() -> new AuthServiceException(ErrorType.JWT_INVALID_TOKEN));
+        Auth auth = repository.findAuthById(authId);
+        auth.setState(state);
+        save(auth);
+
+
     }
 
 //    public DoLoginResponseDto authan(DoLoginRequestDto dto) {

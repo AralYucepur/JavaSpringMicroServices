@@ -21,7 +21,7 @@ public class AuthServiceSecurityConfig {
         httpSecurity.csrf().disable();
         httpSecurity.authorizeRequests()
                 .antMatchers("/v3/api-docs/**","/swagger-ui/**","/v1/dev/auth/dologin","/v1/dev/auth/register"
-                        ,"/v1/dev/auth/deneme","/v1/dev/auth/test")
+                        ,"/v1/dev/auth/deneme","/v1/dev/auth/role","/v1/dev/auth/test")
                 .permitAll()
                 .anyRequest()
                 .authenticated();

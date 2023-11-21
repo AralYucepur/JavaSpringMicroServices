@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class RegisterResponseDto {
     Long authid;
+    String token;
     String content;
     String email;
     Integer registerstate;

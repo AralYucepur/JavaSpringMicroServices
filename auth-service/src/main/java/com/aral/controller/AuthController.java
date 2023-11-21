@@ -4,6 +4,7 @@ import com.aral.dto.request.DoLoginRequestDto;
 import com.aral.dto.request.RegisterRequestDto;
 import com.aral.dto.response.DoLoginResponseDto;
 import com.aral.dto.response.RegisterResponseDto;
+import com.aral.repository.enums.EState;
 import com.aral.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
 
 import static com.aral.constants.RestApi.*;
 
@@ -57,6 +59,12 @@ public class AuthController {
     public ResponseEntity<String> test(){
 
         return ResponseEntity.ok("Test başarılı.");
+
+    }
+    @PostMapping("/role")
+    @CrossOrigin
+    public void role(String token, EState state){
+        authService.saveState(token,state);
 
     }
 
