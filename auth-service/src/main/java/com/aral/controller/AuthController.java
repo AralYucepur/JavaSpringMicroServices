@@ -4,7 +4,6 @@ import com.aral.dto.request.DoLoginRequestDto;
 import com.aral.dto.request.RegisterRequestDto;
 import com.aral.dto.response.DoLoginResponseDto;
 import com.aral.dto.response.RegisterResponseDto;
-import com.aral.repository.enums.EState;
 import com.aral.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -63,8 +62,9 @@ public class AuthController {
     }
     @PostMapping("/role")
     @CrossOrigin
-    public void role(String token, EState state){
-        authService.saveState(token,state);
+    public ResponseEntity<String> role(String token, String activationCode){
+        authService.saveState(token,activationCode);
+        return ResponseEntity.ok("Hesabınız aktifleştirildi");
 
     }
 

@@ -17,7 +17,8 @@ public enum ErrorType{
     JWT_INVALID_TOKEN(4114,"Geçersiz token.",HttpStatus.BAD_REQUEST),
     INVALID_AUTHORITY(4115,"Yetkisiz Kullanıcı.",HttpStatus.BAD_REQUEST),
     INACTIVE_ACCOUNT(4116,"Hesabınız aktif değil. Lütfen Hesabınızı mail adresine gelen kodu kullanarak aktifleştiriniz",HttpStatus.BAD_REQUEST),
-    BLOCKED_ACCOUNT(4117,"Hesabınız yasaklanmıştır.",HttpStatus.BAD_REQUEST)
+    BLOCKED_ACCOUNT(4117,"Hesabınız yasaklanmıştır.",HttpStatus.BAD_REQUEST),
+    WRONG_ACTIVATIONCODE(4118,"Yanlış aktivasyon kodu.",HttpStatus.BAD_REQUEST)
     ;
 
 

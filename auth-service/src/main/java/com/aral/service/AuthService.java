@@ -88,10 +88,15 @@ public class AuthService extends ServiceManager<Auth,Long> {
                 .build();
     }
 
-    public void saveState(String token, EState state){
+    public void saveState(String token, String activationCode){
         Long authId = jwtTokenManager.getByIdFromToken(token).orElseThrow(() -> new AuthServiceException(ErrorType.JWT_INVALID_TOKEN));
         Auth auth = repository.findAuthById(authId);
-        auth.setState(state);
+        if(activationCode.equals(auth.getActivationCode())){
+            auth.setState(EState.ACTIVE);
+        }else{
+            throw new AuthServiceException(ErrorType.WRONG_ACTIVATIONCODE);
+        }
+
         save(auth);
 
 
