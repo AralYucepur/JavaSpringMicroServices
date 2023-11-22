@@ -3,11 +3,13 @@ package com.aral.manager;
 
 
 import com.aral.dto.request.FindProductByIdRequestDto;
+import com.aral.dto.request.PurchaseRequestDto;
 import com.aral.dto.response.FindProductByIdResponseDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
@@ -18,6 +20,9 @@ public interface IProductManager {
     @CrossOrigin("*")
     @PostMapping("/find")
     ResponseEntity<FindProductByIdResponseDto> findProduct(@RequestBody @Valid FindProductByIdRequestDto dto);
+    @CrossOrigin("*")
+    @PutMapping("/purchase")
+    ResponseEntity<String> purchase(@RequestBody @Valid PurchaseRequestDto dto);
 
 
 }

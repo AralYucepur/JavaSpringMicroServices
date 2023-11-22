@@ -1,6 +1,7 @@
 package com.aral.controller;
 
 import com.aral.dto.request.FindProductByIdRequestDto;
+import com.aral.dto.request.PurchaseRequestDto;
 import com.aral.dto.response.FindProductByIdResponseDto;
 import com.aral.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,10 @@ public class ProductController {
 
         return ResponseEntity.ok(productService.findProduct(dto));
 
+    }
+    @PutMapping("/purchase")
+    public ResponseEntity<String> purchase(@RequestBody @Valid PurchaseRequestDto dto){
+        return ResponseEntity.ok(productService.purchase(dto));
     }
 
 }

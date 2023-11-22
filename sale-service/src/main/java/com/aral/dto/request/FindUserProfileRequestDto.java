@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Builder
-public class SaleRequestDto {
-    Integer saleQuantity;
+public class FindUserProfileRequestDto {
+
+    Long authid;
 }

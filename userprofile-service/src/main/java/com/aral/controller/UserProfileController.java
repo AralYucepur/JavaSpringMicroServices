@@ -2,6 +2,10 @@ package com.aral.controller;
 
 import com.aral.dto.request.CreateProfileRequestDto;
 
+import com.aral.dto.request.FindUserProfileRequestDto;
+import com.aral.dto.request.PurchaseRequestDto;
+import com.aral.dto.response.FindUserProfileResponseDto;
+import com.aral.dto.response.PurchaseResponseDto;
 import com.aral.service.UserProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -42,6 +46,27 @@ public class UserProfileController {
         return ResponseEntity.ok("Deneme başarılı.");
 
     }
+    @PutMapping("/addbalance")
+    @CrossOrigin("*")
+    public ResponseEntity<String> addBalance(Long id, Double balance){
+
+        userProfileService.addBalance(id,balance);
+
+        return ResponseEntity.ok("Bakiye yükleme başarılı");
+    }
+    @PutMapping("/purchase")
+    @CrossOrigin("*")
+    public ResponseEntity<PurchaseResponseDto> purchase(PurchaseRequestDto dto){
+
+        return ResponseEntity.ok(userProfileService.purchase(dto));
+    }
+    @GetMapping("/find")
+    @CrossOrigin("*")
+    public ResponseEntity<FindUserProfileResponseDto> findUserProfile(FindUserProfileRequestDto dto){
+
+        return ResponseEntity.ok(userProfileService.findUserProfile(dto));
+    }
+
 
 
 }

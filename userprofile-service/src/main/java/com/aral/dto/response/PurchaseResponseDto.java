@@ -1,4 +1,4 @@
-package com.aral.dto.request;
+package com.aral.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Builder
-public class SaleRequestDto {
-    Integer saleQuantity;
+public class PurchaseResponseDto {
+    String result;
 }

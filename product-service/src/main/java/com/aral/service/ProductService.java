@@ -1,6 +1,7 @@
 package com.aral.service;
 
 import com.aral.dto.request.FindProductByIdRequestDto;
+import com.aral.dto.request.PurchaseRequestDto;
 import com.aral.dto.response.FindProductByIdResponseDto;
 import com.aral.mapper.IProductMapper;
 import com.aral.repository.IProductRepository;
@@ -26,12 +27,15 @@ public class ProductService extends ServiceManager<Product, Long> {
         if(existingOptionalProduct.isEmpty()){
             throw new NullPointerException();}
         else{
-//            CHECK!!!
-            FindProductByIdResponseDto result = IProductMapper.INSTANCE.fromProduct(existingOptionalProduct.get());
-
-
-            return result;
-
+            return IProductMapper.INSTANCE.fromProduct(existingOptionalProduct.get());
         }
     }
+    public String purchase(PurchaseRequestDto dto){
+        Product purchaseProduct = repository.findOptionalByProductId(dto.getProductId()).orElseThrow();
+        purchaseProduct.setStockQuantity(purchaseProduct.getStockQuantity()-dto.getSaleQuantity());
+        save(purchaseProduct);
+        return "Başarılı";
+
+    }
+
 }

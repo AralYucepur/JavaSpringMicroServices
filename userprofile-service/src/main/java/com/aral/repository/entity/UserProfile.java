@@ -2,6 +2,7 @@ package com.aral.repository.entity;
 
 import com.aral.utility.BaseEntity;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -24,5 +25,7 @@ public class UserProfile extends BaseEntity {
     String phone;
     String address;
     String profileimage;
+    @Builder.Default
+    Double balance = 0.0;
 
 }

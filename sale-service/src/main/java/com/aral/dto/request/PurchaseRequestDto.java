@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Builder
-public class SaleRequestDto {
+public class PurchaseRequestDto {
+    Long productId;
     Integer saleQuantity;
+
 }
