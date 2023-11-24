@@ -33,15 +33,19 @@ public class SalesService extends ServiceManager<Sales, Long> {
     @Transactional
     public SaleResponseDto createSales(FindUserProfileRequestDto uDto, FindProductByIdRequestDto pDto, SaleRequestDto sDto) {
         ResponseEntity<FindProductByIdResponseDto> responseProduct = productManager.findProduct(pDto);
+        if (responseProduct.getBody() == null) {
+            throw new IllegalStateException("Ürün bilgisi alınamadı!");
+        }
         ResponseEntity<FindUserProfileResponseDto> responseUserProfile = userProfileManager.findUserProfile(uDto);
+        if (responseUserProfile.getBody() == null) {
+            throw new IllegalStateException("Kullanıcı profil bilgisi alınamadı!");
+        }
         int stockControl = sDto.getSaleQuantity();
         double balanceControl = responseProduct.getBody().getProductPrice()*stockControl;
-//      Reminder!!! >>>  Check null point
-        if (stockControl > responseProduct.getBody().getStockQuantity() && responseProduct.getBody().getStockQuantity()==null) {
+        if (responseProduct.getBody().getStockQuantity()==null || stockControl > responseProduct.getBody().getStockQuantity() ) {
             throw new IllegalStateException("Stok miktarı yetersiz!");
         }
-        //Reminder!!! >>>  Check null point
-        if(balanceControl > responseUserProfile.getBody().getBalance() && responseUserProfile.getBody().getBalance()==null){
+        if(responseUserProfile.getBody().getBalance()==null || balanceControl > responseUserProfile.getBody().getBalance()){
             throw new IllegalStateException("Bakiye miktarınız yetersiz!");
         }
 

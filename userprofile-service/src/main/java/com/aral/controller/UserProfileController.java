@@ -56,13 +56,13 @@ public class UserProfileController {
     }
     @PutMapping("/purchase")
     @CrossOrigin("*")
-    public ResponseEntity<PurchaseResponseDto> purchaseUserProfile(PurchaseUserBalanceRequestDto dto){
+    public ResponseEntity<PurchaseResponseDto> purchaseUserProfile(@RequestBody @Valid PurchaseUserBalanceRequestDto dto){
 
         return ResponseEntity.ok(userProfileService.purchase(dto));
     }
-    @GetMapping("/find")
+    @PostMapping("/find")
     @CrossOrigin("*")
-    public ResponseEntity<FindUserProfileResponseDto> findUserProfile(FindUserProfileRequestDto dto){
+    public ResponseEntity<FindUserProfileResponseDto> findUserProfile(@RequestBody @Valid FindUserProfileRequestDto dto){
 
         return ResponseEntity.ok(userProfileService.findUserProfile(dto));
     }

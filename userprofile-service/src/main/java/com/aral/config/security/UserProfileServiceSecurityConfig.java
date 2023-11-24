@@ -13,17 +13,18 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class UserProfileServiceSecurityConfig {
 
     @Bean
-    JwtTokenFilter getJwtTokenFilter(){
+    JwtTokenFilter getJwtTokenFilter() {
         return new JwtTokenFilter();
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity)throws Exception{
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 
         httpSecurity.csrf().disable();
         httpSecurity.authorizeRequests()
-                .antMatchers("/v3/api-docs/**","/swagger-ui/**","/v1/dev/userprofile/test","/v1/dev/auth/register"
-                        ,"/v1/dev/auth/deneme","/v1/dev/auth/test","v1/dev/userprofile/find")
+                .antMatchers("/v3/api-docs/**", "/swagger-ui/**",
+                        "/v1/dev/userprofile/userdeneme", "/v1/dev/userprofile/find",
+                        "/v1/dev/userprofile/addbalance", "/v1/dev/userprofile/purchase")
                 .permitAll()
                 .anyRequest()
                 .authenticated();

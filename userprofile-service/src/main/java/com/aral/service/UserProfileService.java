@@ -5,13 +5,13 @@ import com.aral.dto.request.FindUserProfileRequestDto;
 import com.aral.dto.request.PurchaseUserBalanceRequestDto;
 import com.aral.dto.response.FindUserProfileResponseDto;
 import com.aral.dto.response.PurchaseResponseDto;
-import com.aral.exception.AuthServiceException;
-import com.aral.exception.ErrorType;
 import com.aral.mapper.IUserProfileMapper;
 import com.aral.repository.IUserProfileRepository;
 import com.aral.repository.entity.UserProfile;
 import com.aral.utility.ServiceManager;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class UserProfileService extends ServiceManager<UserProfile, String> {
@@ -36,7 +36,7 @@ public class UserProfileService extends ServiceManager<UserProfile, String> {
 
     public PurchaseResponseDto purchase(PurchaseUserBalanceRequestDto dto) {
         //Will fix error type!!
-        UserProfile userProfile = repository.findOptionalById(dto.getId()).orElseThrow(() -> new AuthServiceException(ErrorType.LOGIN_ERROR));
+        UserProfile userProfile = repository.findOptionalByAuthid(dto.getId()).orElseThrow();
         double newBalance = userProfile.getBalance() - dto.getBalance();
         userProfile.setBalance(newBalance);
         save(userProfile);
@@ -44,14 +44,22 @@ public class UserProfileService extends ServiceManager<UserProfile, String> {
     }
 
     public FindUserProfileResponseDto findUserProfile(FindUserProfileRequestDto dto) {
-        //Will fix error type!!
-        UserProfile userProfile = repository.findOptionalById(dto.getAuthid()).orElseThrow(() -> new AuthServiceException(ErrorType.LOGIN_ERROR));
-        return IUserProfileMapper.INSTANCE.findUserFromId(userProfile);
+        System.out.println(dto);
+        Optional<UserProfile> optionalUserProfile = repository.findOptionalByAuthid(dto.getAuthid());
+
+        if (optionalUserProfile.isPresent()) {
+            UserProfile userProfile = optionalUserProfile.get();
+            return IUserProfileMapper.INSTANCE.findUserFromId(userProfile);
+        } else {
+            throw new IllegalStateException("Kullanıcı profili bulunamadı");
+        }
     }
 
     public String addBalance(Long id, Double balance){
-        UserProfile userProfile = repository.findOptionalById(id).orElseThrow();
+        UserProfile userProfile = repository.findOptionalByAuthid(id).orElseThrow();
+        System.out.println(userProfile);
         userProfile.setBalance(userProfile.getBalance()+balance);
+        save(userProfile);
 
         return "Bakiye yükleme başarılı";
     }
