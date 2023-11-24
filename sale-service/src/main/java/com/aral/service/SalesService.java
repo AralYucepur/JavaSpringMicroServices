@@ -1,12 +1,11 @@
 package com.aral.service;
 
-import com.aral.dto.request.FindProductByIdRequestDto;
-import com.aral.dto.request.FindUserProfileRequestDto;
-import com.aral.dto.request.PurchaseRequestDto;
-import com.aral.dto.request.SaleRequestDto;
+import com.aral.dto.request.*;
 import com.aral.dto.response.FindProductByIdResponseDto;
+import com.aral.dto.response.FindUserProfileResponseDto;
 import com.aral.dto.response.SaleResponseDto;
 import com.aral.manager.IProductManager;
+import com.aral.manager.IUserProfileManager;
 import com.aral.mapper.ISalesMapper;
 import com.aral.repository.ISales;
 import com.aral.repository.entity.Sales;
@@ -21,38 +20,54 @@ public class SalesService extends ServiceManager<Sales, Long> {
     private final ISales repository;
     private final IProductManager productManager;
 
-    public SalesService(ISales repository, IProductManager productManager) {
+    private final IUserProfileManager userProfileManager;
+
+    public SalesService(ISales repository, IProductManager productManager, IUserProfileManager userProfileManager) {
         super(repository);
         this.repository = repository;
         this.productManager = productManager;
+        this.userProfileManager = userProfileManager;
     }
 
-
+    //Fix Dtos !!!
     @Transactional
-    public SaleResponseDto createSales(FindUserProfileRequestDto uDto,FindProductByIdRequestDto pDto, SaleRequestDto sDto){
-        ResponseEntity<FindProductByIdResponseDto> response = productManager.findProduct(pDto);
+    public SaleResponseDto createSales(FindUserProfileRequestDto uDto, FindProductByIdRequestDto pDto, SaleRequestDto sDto) {
+        ResponseEntity<FindProductByIdResponseDto> responseProduct = productManager.findProduct(pDto);
+        ResponseEntity<FindUserProfileResponseDto> responseUserProfile = userProfileManager.findUserProfile(uDto);
         int stockControl = sDto.getSaleQuantity();
-        double balanceControl;
+        double balanceControl = responseProduct.getBody().getProductPrice()*stockControl;
 //      Reminder!!! >>>  Check null point
-        if(stockControl > response.getBody().getStockQuantity()){
+        if (stockControl > responseProduct.getBody().getStockQuantity() && responseProduct.getBody().getStockQuantity()==null) {
             throw new IllegalStateException("Stok miktarı yetersiz!");
         }
-        else {
-            PurchaseRequestDto purchaseDto = new PurchaseRequestDto();
-            purchaseDto.setProductId(purchaseDto.getProductId());
-            purchaseDto.setSaleQuantity(stockControl);
-        productManager.purchase(purchaseDto);
-        Sales sale = ISalesMapper.INSTANCE.fromProductReturnDto(response.getBody());
-        sale.setSaleQuantity(sDto.getSaleQuantity());
-        sale.setPrice(response.getBody().getProductPrice()*sDto.getSaleQuantity());
-        save(sale);
-        SaleResponseDto saleResponseDto = ISalesMapper.INSTANCE.fromSales(sale);
-        saleResponseDto.setProductPrice(response.getBody().getProductPrice());
-        saleResponseDto.setProductName(response.getBody().getProductName());
-        //Unfinished(making with user match)
-
-        return saleResponseDto;
+        //Reminder!!! >>>  Check null point
+        if(balanceControl > responseUserProfile.getBody().getBalance() && responseUserProfile.getBody().getBalance()==null){
+            throw new IllegalStateException("Bakiye miktarınız yetersiz!");
         }
 
+        PurchaseProductRequestDto purchaseDto = PurchaseProductRequestDto.builder()
+                .productId(pDto.getProductId())
+                .saleQuantity(stockControl)
+                .build();
+        productManager.purchaseProduct(purchaseDto);
+
+        PurchaseUserBalanceRequestDto purchaseUserBalanceRequestDto = PurchaseUserBalanceRequestDto.builder()
+                .id(uDto.getAuthid())
+                .balance(balanceControl)
+                .build();
+        userProfileManager.purchaseUserProfile(purchaseUserBalanceRequestDto);
+
+        Sales sale = ISalesMapper.INSTANCE.fromProductReturnDto(responseProduct.getBody());
+        sale.setSaleQuantity(sDto.getSaleQuantity());
+        sale.setPrice(responseProduct.getBody().getProductPrice() * sDto.getSaleQuantity());
+        save(sale);
+
+        SaleResponseDto saleResponseDto = ISalesMapper.INSTANCE.fromSales(sale);
+        saleResponseDto.setProductPrice(responseProduct.getBody().getProductPrice());
+        saleResponseDto.setProductName(responseProduct.getBody().getProductName());
+
+        return saleResponseDto;
     }
+
 }
+

@@ -3,7 +3,7 @@ package com.aral.manager;
 
 
 import com.aral.dto.request.FindProductByIdRequestDto;
-import com.aral.dto.request.PurchaseRequestDto;
+import com.aral.dto.request.PurchaseProductRequestDto;
 import com.aral.dto.response.FindProductByIdResponseDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,7 @@ public interface IProductManager {
     ResponseEntity<FindProductByIdResponseDto> findProduct(@RequestBody @Valid FindProductByIdRequestDto dto);
     @CrossOrigin("*")
     @PutMapping("/purchase")
-    ResponseEntity<String> purchase(@RequestBody @Valid PurchaseRequestDto dto);
+    ResponseEntity<String> purchaseProduct(@RequestBody @Valid PurchaseProductRequestDto dto);
 
 
 }

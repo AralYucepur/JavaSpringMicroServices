@@ -3,7 +3,7 @@ package com.aral.controller;
 import com.aral.dto.request.CreateProfileRequestDto;
 
 import com.aral.dto.request.FindUserProfileRequestDto;
-import com.aral.dto.request.PurchaseRequestDto;
+import com.aral.dto.request.PurchaseUserBalanceRequestDto;
 import com.aral.dto.response.FindUserProfileResponseDto;
 import com.aral.dto.response.PurchaseResponseDto;
 import com.aral.service.UserProfileService;
@@ -56,7 +56,7 @@ public class UserProfileController {
     }
     @PutMapping("/purchase")
     @CrossOrigin("*")
-    public ResponseEntity<PurchaseResponseDto> purchase(PurchaseRequestDto dto){
+    public ResponseEntity<PurchaseResponseDto> purchaseUserProfile(PurchaseUserBalanceRequestDto dto){
 
         return ResponseEntity.ok(userProfileService.purchase(dto));
     }

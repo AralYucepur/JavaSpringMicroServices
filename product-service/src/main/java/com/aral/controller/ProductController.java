@@ -25,7 +25,7 @@ public class ProductController {
 
     }
     @PutMapping("/purchase")
-    public ResponseEntity<String> purchase(@RequestBody @Valid PurchaseRequestDto dto){
+    public ResponseEntity<String> purchaseProduct(@RequestBody @Valid PurchaseRequestDto dto){
         return ResponseEntity.ok(productService.purchase(dto));
     }
 

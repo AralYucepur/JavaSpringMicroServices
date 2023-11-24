@@ -2,7 +2,7 @@ package com.aral.service;
 
 import com.aral.dto.request.CreateProfileRequestDto;
 import com.aral.dto.request.FindUserProfileRequestDto;
-import com.aral.dto.request.PurchaseRequestDto;
+import com.aral.dto.request.PurchaseUserBalanceRequestDto;
 import com.aral.dto.response.FindUserProfileResponseDto;
 import com.aral.dto.response.PurchaseResponseDto;
 import com.aral.exception.AuthServiceException;
@@ -34,7 +34,7 @@ public class UserProfileService extends ServiceManager<UserProfile, String> {
 
     }
 
-    public PurchaseResponseDto purchase(PurchaseRequestDto dto) {
+    public PurchaseResponseDto purchase(PurchaseUserBalanceRequestDto dto) {
         //Will fix error type!!
         UserProfile userProfile = repository.findOptionalById(dto.getId()).orElseThrow(() -> new AuthServiceException(ErrorType.LOGIN_ERROR));
         double newBalance = userProfile.getBalance() - dto.getBalance();
