@@ -7,4 +7,5 @@ include 'elastic-search-service'
 include 'product-service'
 include 'sale-service'
 include 'mail-service'
+include 'config-server-git'
 
