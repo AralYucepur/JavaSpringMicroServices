@@ -81,4 +81,23 @@ public class JwtTokenManager {
             return Optional.empty();
         }
     }
+    public Optional<String> extendExpiration(String token) {
+        try {
+            DecodedJWT decodedJWT = JWT.decode(token);
+            long expirationMillis = decodedJWT.getExpiresAt().getTime() + 5 * 60 * 1000;
+            Algorithm algorithm = Algorithm.HMAC512(keypassword);
+            String newToken = JWT.create()
+                    .withAudience()
+                    .withClaim("id", decodedJWT.getClaim("id").asLong())
+                    .withClaim("role", decodedJWT.getClaim("role").asString())
+                    .withClaim("state", decodedJWT.getClaim("state").asString())
+                    .withIssuer("aral")
+                    .withIssuedAt(new Date())
+                    .withExpiresAt(new Date(expirationMillis))
+                    .sign(algorithm);
+            return Optional.of(newToken);
+        } catch (Exception exception) {
+            return Optional.empty();
+        }
+    }
 }
